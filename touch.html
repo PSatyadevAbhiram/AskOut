@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Move Button Away</title>
+  <style>
+    .container {
+      text-align: center;
+    }
+
+    .options {
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #noButton.move-away {
+      transition: transform 0.5s ease-in-out;
+    }
+
+    @keyframes confetti {
+      0% { transform: translateY(-100vh) rotate(0deg); }
+      100% { transform: translateY(100vh) rotate(360deg); }
+    }
+
+    @keyframes rain {
+      0% { transform: translateY(-100vh); }
+      100% { transform: translateY(100vh); }
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: confetti 3s linear forwards;
+    }
+
+    .raindrop {
+      position: fixed;
+      width: 2px;
+      height: 15px;
+      background-color: blue;
+      animation: rain 2s linear forwards;
+    }
+
+    .advertisement {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #ffffff;
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .advertisement.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Will you go out with me?</h1>
+    <div class="options">
+      <button onclick="throwConfettiAndShowAd()" id="yesButton">Yes</button>
+      <button onclick="createRain()" id="noButton">No</button>
+    </div>
+  </div>
+  <script>
+    const noButton = document.getElementById('noButton');
+    const confettiContainer = document.querySelector('.container');
+
+    noButton.addEventListener('mouseover', () => {
+      const maxX = window.innerWidth - 600;
+      const maxY = window.innerHeight - 100;
+
+      const newX = Math.random() * (maxX);
+      const newY = Math.random() * (maxY);
+
+      const transformValue = `translate(${newX}px, ${newY}px)`;
+
+      noButton.style.transform = transformValue;
+      noButton.classList.add('move-away'); // Add class to ensure transition
+    });
+
+    function throwConfettiAndShowAd() {
+      for (let i = 0; i < 1000; i++) { // Increase the number of confetti
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random() * window.innerWidth + 'px';
+        confetti.style.top = Math.random() * window.innerHeight + 'px'; // Set random top position
+        confetti.style.backgroundColor = getRandomColor(); // Set random background color
+        confettiContainer.appendChild(confetti);
+      }
+
+      const advertisement = document.createElement('div');
+      advertisement.classList.add('advertisement');
+      advertisement.textContent = "Add me back on Insta shawtyy!";
+      confettiContainer.appendChild(advertisement);
+
+      // Triggering reflow to ensure transition effect
+      void advertisement.offsetWidth;
+
+      advertisement.classList.add('show');
+    }
+
+    function createRain() {
+      for (let i = 0; i < 1000; i++) { // Increase the number of raindrops
+        const raindrop = document.createElement('div');
+        raindrop.classList.add('raindrop');
+        raindrop.style.left = Math.random() * window.innerWidth + 'px';
+        raindrop.style.top = Math.random() * window.innerHeight + 'px'; // Set random top position
+        confettiContainer.appendChild(raindrop);
+      }
+
+      // Remove raindrops after animation ends
+      const raindrops = document.querySelectorAll('.raindrop');
+      raindrops.forEach(raindrop => {
+        raindrop.addEventListener('animationend', () => {
+          raindrop.remove();
+        });
+      });
+    }
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+  </script>
+</body>
+</html>
