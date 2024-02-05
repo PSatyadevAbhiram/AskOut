@@ -66,6 +66,17 @@
     .advertisement.show {
       opacity: 1;
     }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+      z-index: 999; /* Ensure it's above other content */
+      display: none; /* Initially hidden */
+    }
   </style>
 </head>
 <body>
@@ -76,9 +87,11 @@
       <button onclick="createRain()" id="noButton">No</button>
     </div>
   </div>
+  <div class="overlay"></div> <!-- Overlay div -->
   <script>
     const noButton = document.getElementById('noButton');
     const confettiContainer = document.querySelector('.container');
+    const overlay = document.querySelector('.overlay');
 
     noButton.addEventListener('mouseover', () => {
       const maxX = window.innerWidth - 600;
@@ -115,6 +128,8 @@
     }
 
     function createRain() {
+      overlay.style.display = 'block'; // Show the overlay
+
       for (let i = 0; i < 1000; i++) { // Increase the number of raindrops
         const raindrop = document.createElement('div');
         raindrop.classList.add('raindrop');
@@ -123,11 +138,12 @@
         confettiContainer.appendChild(raindrop);
       }
 
-      // Remove raindrops after animation ends
+      // Remove raindrops and hide overlay after animation ends
       const raindrops = document.querySelectorAll('.raindrop');
       raindrops.forEach(raindrop => {
         raindrop.addEventListener('animationend', () => {
           raindrop.remove();
+          overlay.style.display = 'none'; // Hide the overlay
         });
       });
     }
